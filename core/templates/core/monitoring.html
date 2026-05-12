@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h1>Мониторинг проверок</h1>
+
+<form method="GET" class="mb-3 d-flex gap-2 align-items-center">
+    <label>Сортировка:</label>
+    <select name="sort" class="form-select w-auto">
+        <option value="kogda">Сначала старые</option>
+        <option value="-kogda">Сначала новые</option>
+    </select>
+    <button type="submit" class="btn btn-secondary btn-sm">Применить</button>
+</form>
+
+<table class="table table-striped mt-3">
+    <thead class="table-dark">
+        <tr>
+            <th>Название</th>
+            <th>Информация</th>
+            <th>Дата</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in dannie %}
+        <tr>
+            <td><strong>{{ d.imya }}</strong></td>
+            <td>{{ d.info }}</td>
+            <td>{{ d.kogda|date:"d.m.Y" }}</td>
+            <td>
+                <span class="badge bg-primary">{{ d.ststus }}</span>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center">Нет проверок</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>О себе и программе</h1>
+<div class="mb-4" style="display: flex; align-items: center; gap: 20px;">
+    {% if ya.foto %}
+        <img src="{% static ya.foto.name %}" alt="{{ ya.fio }}" style="width: 150px; border-radius: 10px;">
+    {% endif %}
+    <div>
+        <p><strong>Автор:</strong> {{ ya.fio }} <br>({{ ya.pochta }})</p>
+    </div>
+</div>
+
+<h3>Программа: {{ proga.nazvamie }}</h3>
+<p>{{ proga.opisanie }}</p>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h5>Руководитель</h5>
+        {% if proga.rukovoditel.foto %}
+            <img src="{% static proga.rukovoditel.foto.name %}" alt="{{ proga.rukovoditel.fio }}" style="width: 120px; border-radius: 8px; margin-bottom: 10px;">
+        {% endif %}
+        <p>{{ proga.rukovoditel.fio }}<br><i>{{ proga.rukovoditel.pochta }}</i></p>
+    </div>
+    <div class="col-md-6">
+        <h5>Менеджер</h5>
+        {% if proga.menedjer.foto %}
+            <img src="{% static proga.menedjer.foto.name %}" alt="{{ proga.menedjer.fio }}" style="width: 120px; border-radius: 8px; margin-bottom: 10px;">
+        {% endif %}
+        <p>{{ proga.menedjer.fio }}<br><i>{{ proga.menedjer.pochta }}</i></p>
+    </div>
+</div>
+
+<h4>Одногруппники</h4>
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th>Фото</th>
+            <th>ФИО</th>
+            <th>Почта</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in gryppa %}
+        <tr>
+            <td>
+                {% if c.foto %}
+                    <img src="{% static c.foto.name %}" alt="{{ c.fio }}" style="width: 80px; border-radius: 5px;">
+                {% else %}
+                    <span>Нет фото</span>
+                {% endif %}
+            </td>
+            <td>{{ c.fio }}</td>
+            <td>{{ c.pochta }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+<h4>Отзывы (Средний балл: {{ ball|floatformat:1 }})</h4>
+<form method="GET" class="mb-3">
+    <select name="sort">
+        <option value="-data_sozdaniya">Сначала новые</option>
+        <option value="-ocenks">По оценке (убывание)</option>
+    </select>
+    <button type="submit" class="btn btn-sm btn-secondary">Сортировать</button>
+</form>
+
+<table class="table table-bordered">
+    {% for o in otzivi %}
+    <tr>
+        <td><strong>{{ o.nik }}</strong></td>
+        <td>{{ o.tekst }}</td>
+        <td>Оценка: {{ o.ocenks }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h5>Оставить отзыв</h5>
+<form method="POST">
+    {% csrf_token %}
+    {{ forma.as_p }}
+    <button type="submit" class="btn btn-success">Отправить</button>
+</form>
+{% endblock %}
